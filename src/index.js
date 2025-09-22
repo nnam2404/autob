@@ -195,7 +195,7 @@ provider.on(filter, async (log) => {
 (async () => {
     for (const [token, rec] of Object.entries(db)) {
         if (rec.buyTx && !rec.sellTx) {
-            console.log(`⏳ Scheduling sell for previously bought token ${token} (in 10 minutes)…`);
+            console.log(`⏳ Scheduling sell for previously bought token ${token}…`);
             scheduleAutoSell(token);
         }
     }
