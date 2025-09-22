@@ -60,6 +60,7 @@ const MIN_TOKENS_OUT = 0n;           // set your slippage rule here if needed
 const MIN_FUNDING_OUT = 0n;          // set your slippage rule here if needed
 
 // === Helpers ===
+const iface = new ethers.Interface(ERC20_ABI);
 const transferTopic = ethers.id("Transfer(address,address,uint256)");
 const addrEq = (a, b) => a && b && a.toLowerCase() === b.toLowerCase();
 
@@ -173,7 +174,7 @@ provider.on({ topics: [transferTopic] }, async (log) => {
     } catch (err) {
         // Many logs won't be the Transfer we expect; parse errors are normal for other contracts
         // but since we filtered by topic it's mostly safe. Still, keep it quiet except real issues.
-        // console.error("Parse/Filter error:", err);
+        console.error("Parse/Filter error:", err);
     }
 });
 
