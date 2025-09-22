@@ -60,8 +60,6 @@ const MIN_TOKENS_OUT = 0n;           // set your slippage rule here if needed
 const MIN_FUNDING_OUT = 0n;          // set your slippage rule here if needed
 
 // === Helpers ===
-const iface = new ethers.Interface(ERC20_ABI);
-const transferTopic = ethers.id("Transfer(address,address,uint256)");
 const addrEq = (a, b) => a && b && a.toLowerCase() === b.toLowerCase();
 
 async function scheduleAutoSell(tokenAddr) {
@@ -157,9 +155,19 @@ async function handleNewToken(tokenAddr, factoryRecipient) {
     }
 }
 
+const iface = new ethers.Interface(ERC20_ABI);
+
+const transferTopic = ethers.id("Transfer(address,address,uint256)");
+const topicZero = ethers.zeroPadValue(ethers.ZeroAddress, 32);
+const topicToFact = ethers.zeroPadValue(FactoryAddress, 32);
+
+const filter = {
+    topics: [transferTopic, topicZero, topicToFact]
+};
+
 // === Event subscription ===
 // We listen to ALL Transfer events and filter for mints to the factory address.
-provider.on({ topics: [transferTopic] }, async (log) => {
+provider.on(filter, async (log) => {
     try {
         const parsed = iface.parseLog(log); // { name: 'Transfer', args: [from,to,value] }
         const { from, to } = parsed.args;
