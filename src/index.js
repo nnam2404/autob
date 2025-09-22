@@ -50,7 +50,7 @@ const db = loadDB();
 const processing = new Set(); // tokenAddrs lowercased
 
 // === Config ===
-const BUY_BNB = "0.02";              // 0.02 BNB buy
+const BUY_BNB = "0.0202";              // 0.02 BNB buy
 const GAS_LIMIT_BUY = 300_000n;
 const GAS_LIMIT_APPROVE = 120_000n;
 const GAS_LIMIT_SELL = 300_000n;
