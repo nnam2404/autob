@@ -55,7 +55,7 @@ const GAS_LIMIT_BUY = 300_000n;
 const GAS_LIMIT_APPROVE = 120_000n;
 const GAS_LIMIT_SELL = 300_000n;
 const CONFIRMATIONS = 1;             // wait for 1 conf
-const SELL_DELAY_MS = 5 * 60 * 1000; // 10 minutes
+const SELL_DELAY_MS = 8 * 60 * 1000; // 8 minutes
 const MIN_TOKENS_OUT = 0n;           // set your slippage rule here if needed
 const MIN_FUNDING_OUT = 0n;          // set your slippage rule here if needed
 
@@ -89,9 +89,14 @@ async function scheduleAutoSell(tokenAddr) {
                 }
             }
 
+            let amountToSell = bal;
+            const oneUnit = 10n ** BigInt(dec);
+            if (bal > oneUnit) amountToSell = bal - (oneUnit / 1000n || 1n); // minus ~0.001 token unit (>=1 wei)
+
+
             // Sell
-            console.log(`💸 Selling ${tokenAddr} amount=${bal.toString()} (decimals=${dec})…`);
-            const txSell = await sale.sell(tokenAddr, bal, MIN_FUNDING_OUT, { gasLimit: GAS_LIMIT_SELL });
+            console.log(`💸 Selling ${tokenAddr} amount=${amountToSell.toString()} (decimals=${dec})…`);
+            const txSell = await sale.sell(tokenAddr, amountToSell, MIN_FUNDING_OUT, { gasLimit: GAS_LIMIT_SELL });
             console.log(`Sell tx sent: ${txSell.hash}`);
             const rS = await txSell.wait(CONFIRMATIONS);
             if (rS?.status) {
