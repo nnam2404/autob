@@ -33,7 +33,7 @@ const ERC20_ABI = [
 const sale = new ethers.Contract(SaleContractAddress, SaleContractAbi, wallet);
 
 // === Persistence (avoid double buys & remember sells) ===
-const DB_FILE = "./purchased.json";
+const DB_FILE = "./data/purchased.json";
 function loadDB() {
     try {
         return JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
